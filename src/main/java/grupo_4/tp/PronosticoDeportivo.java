@@ -13,24 +13,24 @@ import java.util.List;
 public class PronosticoDeportivo {
     private ListaEquipos equipos;
     private ListaPartidos partidos;
-    private ListaPronosticos pronosticos;
-    private ListaParticipantes participantes;
+    /*private ListaPronosticos pronosticos;
+    private ListaParticipantes participantes;*/
 
     public PronosticoDeportivo() {
         equipos = new ListaEquipos();
         partidos = new ListaPartidos();
-        pronosticos = new ListaPronosticos();
-        participantes = new ListaParticipantes();
+        /*pronosticos = new ListaPronosticos();
+        participantes = new ListaParticipantes();*/
     }
 
     public void play(){
        // cargar y listar los equipos
-        equipos.cargarDeArchivo();
+        equipos.cargarDeDB();
         System.out.println("Los equipos cargados son: " + equipos.listar()+ "\n" );
         // cargar lista de partidos
-        partidos.cargarDeArchivo(equipos);
+        partidos.cargarDeDB(equipos);
         System.out.println("Los partidos cargados son: " + partidos.listar()+ "\n" );
-        // cargar lista de pronosticos
+       /* // cargar lista de pronosticos
         pronosticos.cargarDeArchivo(partidos);
         System.out.println("Los pronosticos cargados son: " + pronosticos.listar()+ "\n" );
         
@@ -48,7 +48,7 @@ public class PronosticoDeportivo {
         }   
         System.out.println("Los Participantes cargados son: " + lista + "\n");
         
-        System.out.println("Los aciertos de cada participante son: " + aciertosParticipante);
+        System.out.println("Los aciertos de cada participante son: " + aciertosParticipante);*/
         
         
         
