@@ -6,7 +6,13 @@ package grupo_4.tp;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 /**
@@ -97,7 +103,7 @@ public class ListaParticipantes {
                 String Participante = vectorParticipante[1];
               //  ListaPronosticos pronos = pronosticos.cargarDeArchivo(pronosticos,idParticipante);
                 // crea el objeto en memoria
-                participante = new Participante(idParticipante, Participante, null, 0);
+                participante = new Participante(idParticipante, Participante, null);
                 
                 // llama al metodo add para grabar el equipo en la lista en memoria
                 this.addParticipante(participante);
@@ -107,5 +113,69 @@ public class ListaParticipantes {
                 System.out.println("Mensaje: " + ex.getMessage());
         }       
 
+    }
+    
+        public void cargarDeDB(){
+        Participante participante;
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:sqlite:pronosticos.db");
+            Statement sta = conn.createStatement();
+            String consulta = "SELECT idParticipante, nombre FROM Participantes";
+            ResultSet rs = sta.executeQuery(consulta);
+            while (rs.next()){
+                // crea el objeto en memoria
+                participante = new Participante(rs.getInt("idParticipante"), rs.getString("nombre"), null);
+                
+                // llama al metodo add para grabar el equipo en la lista en memoria
+                this.addParticipante(participante);
+
+            }
+        
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                // conn close failed.
+                System.out.println(e.getMessage());
+            }
+        }
+    
+    }
+        
+    public List<Participante> getOrdenadosPorPuntaje(){
+        List<Participante> ordenados = new ArrayList<Participante>();
+        ordenados.addAll(participantes);
+        
+        Collections.sort(ordenados, Collections.reverseOrder());
+        return ordenados;
+    }
+    
+    public String listaOrdenadosPorPuntaje(){
+        List<Participante> ordenados = this.getOrdenadosPorPuntaje();
+        String lista = "";
+        for (Participante participante: ordenados){
+            lista += "\n nombre: " + participante.getNombre() + " - puntaje Total:  " + participante.getPuntaje()+ " - #aciertos:  " + participante.getAciertos();
+        }
+        return lista;
+    }
+    
+    public String getGanador(){
+        List<Participante> ordenados = this.getOrdenadosPorPuntaje();
+        int puntos = 0;
+        String lista = "El/los ganador/es son: ";
+        for (Participante participante: ordenados ) {
+          if (puntos <= participante.getPuntaje()){
+             puntos = participante.getPuntaje();
+             lista += "\n" + participante.getNombre() + " - puntaje Total:  " + participante.getPuntaje();
+            }else
+                break;
+        } 
+        
+        return lista;
     }
 }
