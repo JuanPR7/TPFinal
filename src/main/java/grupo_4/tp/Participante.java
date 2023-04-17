@@ -4,13 +4,13 @@ package grupo_4.tp;
 /*
  * @author Grupo 4
  */
-public class Participante {
+public class Participante implements Comparable<Participante>{
     
     private int idParticipante;
     private String nombre;
     private ListaPronosticos pronosticos;
 
-    public Participante(int idParticipante, String nombre, ListaPronosticos pronosticos, int puntaje) {
+    public Participante(int idParticipante, String nombre, ListaPronosticos pronosticos) {
         this.idParticipante = idParticipante;
         this.nombre = nombre;
         this.pronosticos = pronosticos;
@@ -84,7 +84,19 @@ public class Participante {
         
         return aciertos;
     }
-    
-     
+
+    @Override
+    public int compareTo(Participante p) {
+        int miPuntaje = this.getPuntaje();
+        int otroPuntaje = p.getPuntaje();
+        if (miPuntaje == otroPuntaje)
+            return 0;
+        else if(miPuntaje > otroPuntaje)
+            return 1;
+        else
+            return -1;     
+    }
+
+
     
 }

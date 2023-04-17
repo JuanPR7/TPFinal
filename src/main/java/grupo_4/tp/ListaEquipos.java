@@ -3,6 +3,12 @@ Clase ListaEquipos para la entrega 2
  */
 package grupo_4.tp;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -130,6 +136,35 @@ public class ListaEquipos {
                 System.out.println("Mensaje: " + ex.getMessage());
         }       
 
+    }
+    
+    public void cargarDeDB(){
+        Equipo equipo;
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:sqlite:pronosticos.db");
+            Statement sta = conn.createStatement();
+            String consulta = "SELECT idEquipo, nombre, descripcion FROM Equipos";
+            ResultSet rs = sta.executeQuery(consulta);
+            while (rs.next()){
+                // crea el objeto en memoria
+                equipo = new Equipo(rs.getInt("idEquipo"), rs.getString("nombre"), rs.getString("descripcion"));
+                this.addEquipo(equipo);
+            }
+        
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                // conn close failed.
+                System.out.println(e.getMessage());
+            }
+        }
+    
     }
 
 }

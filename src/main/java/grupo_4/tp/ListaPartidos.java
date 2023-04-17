@@ -4,6 +4,12 @@
  */
 package grupo_4.tp;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -133,6 +139,41 @@ public class ListaPartidos {
                 System.out.println("Mensaje: " + ex.getMessage());
         }       
 
+    }
+    
+        public void cargarDeDB(ListaEquipos listEquipos){
+        Partido partido;    
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:sqlite:pronosticos.db");
+            Statement sta = conn.createStatement();
+            String consulta = "SELECT idPartido, idEquipo1, idEquipo2, GolesEquipo1, GolesEquipo2 FROM Partidos";
+            ResultSet rs = sta.executeQuery(consulta);
+            while (rs.next()){
+                //obtengo los equipos desde el idequipo
+                Equipo e1 = listEquipos.getEquipo(rs.getInt("idEquipo1"));
+                Equipo e2 = listEquipos.getEquipo(rs.getInt("idEquipo2"));
+                
+                // crea el objeto en memoria
+                partido = new Partido(rs.getInt("idPartido") , e1, e2, rs.getInt("GolesEquipo1"), rs.getInt("GolesEquipo2"));
+                
+                 this.addPartido(partido);
+
+            }
+        
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                // conn close failed.
+                System.out.println(e.getMessage());
+            }
+        }
+    
     }
     
 }

@@ -3,6 +3,11 @@ package grupo_4.tp;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -188,6 +193,86 @@ public class ListaPronosticos {
 
     }
 
+       public void cargarDeDB(ListaPartidos listPartidos, int IDparticipante){
+        Pronostico pronostico;   
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:sqlite:pronosticos.db");
+            Statement sta = conn.createStatement();
+            String consulta = "SELECT idPronostico, idParticipante, idPartido, idEquipo, resultado FROM Pronosticos";
+            ResultSet rs = sta.executeQuery(consulta);
+            while (rs.next()){
+                if(IDparticipante == rs.getInt("idParticipante")){
+                Partido partido = listPartidos.getPartido(rs.getInt("idPartido"));
+                int eq = rs.getInt("idEquipo");
+                  Equipo equipo = new Equipo();
+                if (eq == 1){
+                    equipo = partido.getEquipo1();
+                }else{
+                     equipo = partido.getEquipo2();
+                }
+                // crea el objeto en memoria
+                pronostico = new Pronostico(rs.getInt("idPronostico"), equipo, partido, rs.getString("resultado").charAt(0));
+                
+                // llama al metodo add para grabar el equipo en la lista en memoria
+                this.addPronosticos(pronostico);
+                }
+            }
+        
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                // conn close failed.
+                System.out.println(e.getMessage());
+            }
+        }
     
+    } 
     
+              public void cargarDeDB(ListaPartidos listPartidos){
+        Pronostico pronostico;   
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:sqlite:pronosticos.db");
+            Statement sta = conn.createStatement();
+            String consulta = "SELECT idPronostico, idParticipante, idPartido, idEquipo, resultado FROM Pronosticos";
+            ResultSet rs = sta.executeQuery(consulta);
+            while (rs.next()){
+                
+                Partido partido = listPartidos.getPartido(rs.getInt("idPartido"));
+                int eq = rs.getInt("idEquipo");
+                  Equipo equipo = new Equipo();
+                if (eq == 1){
+                    equipo = partido.getEquipo1();
+                }else{
+                     equipo = partido.getEquipo2();
+                }
+                // crea el objeto en memoria
+                pronostico = new Pronostico(rs.getInt("idPronostico"), equipo, partido, rs.getString("resultado").charAt(0));
+                
+                // llama al metodo add para grabar el equipo en la lista en memoria
+                this.addPronosticos(pronostico);
+
+            }
+        
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                // conn close failed.
+                System.out.println(e.getMessage());
+            }
+        }
+    
+    } 
+              
 }

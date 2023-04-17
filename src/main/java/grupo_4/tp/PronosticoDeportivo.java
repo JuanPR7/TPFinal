@@ -3,6 +3,7 @@ Para entrega 2
  */
 package grupo_4.tp;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -26,31 +27,35 @@ public class PronosticoDeportivo {
     public void play(){
        // cargar y listar los equipos
         equipos.cargarDeDB();
-        System.out.println("Los equipos cargados son: " + equipos.listar()+ "\n" );
+       // System.out.println("Los equipos cargados son: " + equipos.listar()+ "\n" );
         // cargar lista de partidos
         partidos.cargarDeDB(equipos);
-        System.out.println("Los partidos cargados son: " + partidos.listar()+ "\n" );
+       // System.out.println("Los partidos cargados son: " + partidos.listar()+ "\n" );
         // cargar lista de pronosticos
         pronosticos.cargarDeDB(partidos);
-        System.out.println("Los pronosticos cargados son: " + pronosticos.listar()+ "\n" );
+        //System.out.println("Los pronosticos cargados son: " + pronosticos.listar()+ "\n" );
         
         //cargar la lista de participantes con su lista de pronostico de cada participante
         participantes.cargarDeDB();
-        System.out.println("Los participantes cargados son: " + participantes.listar()+ "\n" );
-      /*  String lista = "";
-        String aciertosParticipante = ""; // carga la lista de aciertos y puntaje de cada participante
+        //System.out.println("Los participantes cargados son: " + participantes.listar()+ "\n" );
+        String lista = "";
         List<Participante> p = participantes.getParticipantes();
         for (Participante participante: p ) {
             ListaPronosticos pronosticosP = new ListaPronosticos();
-            pronosticosP.cargarDeArchivo(partidos,participante.getIdParticipante());
+            pronosticosP.cargarDeDB(partidos,participante.getIdParticipante());
             participante.setPronosticos(pronosticosP);
-            lista += "\n" + participante;
-            aciertosParticipante += "\n nombre: " + participante.getNombre() + " - puntaje Total:  " + participante.getPuntaje()+ " - #aciertos:  " + participante.getAciertos();
         }   
-        System.out.println("Los Participantes cargados son: " + lista + "\n");
+        lista = participantes.listaOrdenadosPorPuntaje();
         
-        System.out.println("Los aciertos de cada participante son: " + aciertosParticipante);*/
         
+        System.out.println("Ordenados por puntaje: " + lista + "\n");
+        
+       
+         System.out.println( participantes.getGanador() + "\n");
+        
+        
+        
+
         
         
         
